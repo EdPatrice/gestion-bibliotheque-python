@@ -1,0 +1,40 @@
+import fonctions.fonctions_utilisateur as u
+import fonctions.fonctions_emprunt as e
+import fonctions.util as util
+
+def menu():
+    util.clear_screen()
+    print("------------BIENVENUE------------\n\n")
+
+    print("\n1. Gestion des livres. \n2. Gestion des utilisateurs. \n3. Gestion des emprunts et des retours. \n4. Rapports et statistiques. \n\n0. Exit.")
+    choix = input("\n\nChoisissez une option -> ")
+    while util.choix_valide(choix, 0, 4) != True:    
+        choix = input("\nChoix incorrect, reessayez -> ")
+    options_menu(int(choix))
+
+def options_menu(choix: int):
+    match choix:
+        #fermer le programme 
+        case 0: 
+            util.clear_screen()
+            exit()
+        # gestion livres
+        case 1: 
+            pass
+        # gestion utilisateurs
+        case 2: 
+            util.clear_screen()
+            u.menu_utilisateur()
+        # gestion emprunts
+        case 3:
+            util.clear_screen()
+            e.insertion_emprunt()
+        # rapports
+        case 4: 
+            util.clear_screen()
+            pass
+
+    # util.wait()
+    util.clear_screen()
+    menu()
+        
