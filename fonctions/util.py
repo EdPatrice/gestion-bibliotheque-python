@@ -1,6 +1,14 @@
 import os
 import datetime
 
+def read_json(filepath: str) -> dict:
+    import json
+    try:
+        with open(filepath, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
 def choix_valide(choix: str, borne1: int, borne2: int) -> bool:    
     try: 
         choix = int(choix)

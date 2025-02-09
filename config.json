@@ -1,0 +1,5 @@
+{
+    "USERS_CSV": "./database/utilisateurs.csv",
+    "BOOKS_CSV": "./database/livres.csv",
+    "EMPRUNTS_CSV": "./database/emprunts.csv"
+}

@@ -2,6 +2,7 @@ from classes import Utilisateur
 import fonctions.util as util
 import fonctions.menu as menu
 
+
 # Liste pour stocker les utilisateurs
 utilisateurs = []
 compteur_id = 1  # Compteur pour générer des IDs uniques
