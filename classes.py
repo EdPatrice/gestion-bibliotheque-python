@@ -99,58 +99,58 @@ class Gestion_Utilisateurs:
             print("Contact:\t", self.contact, '\n')
    
 class Livre: 
-    
     def __init__(self, id, title, author, genre):
         self.id = id
         self.title = title
         self.author = author
-        self.genre = genre    
+        self.genre = genre
 
-class Gestion_Livres: 
-    
+    def __str__(self):
+        return f"id: {self.id}\ntitle: {self.title}\nauthor: {self.author}\ngenre: {self.genre}"
+
+class Gestion_Livres:
     def __init__(self):
         self.books: list[Livre] = []
 
-    def add_book(self, books: list[Livre]):
-        for book in books: 
-            self.books.append(book)
-
-    def search_book(self, id) -> Livre: 
-        for book in self.books: 
-            if book.id == id: 
-                return book
-        return None
+    def ajouter(self, id, title, author, genre):
+        book = Livre(id, title, author, genre)
+        self.books.append(book)
     
-    @classmethod
     def get_book_info(self, book_id: str) -> tuple[Livre, int]:
-        book_exists = False
-        with open(files["BOOKS_CSV"], 'r') as f: 
-            books = f.readlines()
-        index_livre = 0
-        for book in books:
-            book = book.replace('\n', '').split(", ")
-            if book[0] == book_id:
-                book_exists = True
-                book_title = book[1]
-                book_author = book[2]
-                book_genre = book[3]
-                livre = Livre(book_id, book_title, book_author, book_genre)
-            index_livre += 1
-        if book_exists:
-            return livre, index_livre
-        else:
-            return None
-    
-    @classmethod
-    def list_books(self, get_all_details: bool= 0):
-        with open(files["BOOKS_CSV"], 'r') as f:
-            books = f.readlines()        
-        for book in books[1:]: 
-            book = book.split(', ')
+        for index, book in enumerate(self.books):
+            if book.id == book_id:
+                return book, index
+        return None, None
+
+    def list_books(self, get_all_details: bool = False):
+        for book in self.books: 
             if not get_all_details: 
-                print("ID:", book[0], "\tTitle:", book[1])
+                print(f"id: {book.id}\ttitle: {book.title}")
             else:
-                print("ID:", book[0], "\tTitle:", book[1], "Author:", book[2], "Genre:", book[3])                
+                print(f"id: {book.id}\ttitle: {book.title}\tauthor: {book.author}\tgenre: {book.genre}")
+
+    def modifier_livre(self, book_id: str, new_title: str = None, new_author: str = None, new_genre: str = None):
+        book, index = self.get_book_info(book_id)
+        if book:
+            if new_title:
+                book.title = new_title
+            if new_author:
+                book.author = new_author
+            if new_genre:
+                book.genre = new_genre
+            self.books[index] = book
+            print("\nModifications effectuées avec succès.\n")
+        else:
+            print("\nLivre non trouvé.\n")
+
+    def supprimer_livre(self, book_id: str):
+        book, index = self.get_book_info(book_id)
+        if book:
+            self.books.pop(index)
+            print("\nLivre supprimé avec succès.\n")
+        else:
+            print("\nLivre non trouvé.\n")
+              
 
 class Emprunt: 
 
