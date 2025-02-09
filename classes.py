@@ -58,7 +58,7 @@ class Gestion_Utilisateurs:
                 prenom = user[1]
                 nom = user[2]
                 contact = user[3]
-                utilisateur = Utilisateur(id_utilisateur, nom, prenom, contact)
+                utilisateur = Utilisateur(id_utilisateur, prenom, nom, contact)
             index_utilisateur += 1
         if utilisateur_existe:
             return utilisateur, index_utilisateur

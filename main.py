@@ -1,4 +1,4 @@
-from fonctions.menu import menu
+from fonctions.menu import menu_principal
 import fonctions.util as util 
 import json
 
@@ -10,4 +10,4 @@ if files == None:
     with open("config.json", 'w') as f:
         f.write('{\n"USERS_CSV": "./database/utilisateurs.csv", \n"BOOKS_CSV": "./database/livres.csv", \n"EMPRUNTS_CSV": "./database/emprunts.csv"}')
 
-menu()
+menu_principal()

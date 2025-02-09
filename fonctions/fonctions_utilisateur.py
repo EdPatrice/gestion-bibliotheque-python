@@ -1,6 +1,5 @@
 from classes import Utilisateur
 import fonctions.util as util
-import fonctions.menu as menu
 
 
 # Liste pour stocker les utilisateurs
@@ -84,9 +83,6 @@ def menu_utilisateur():
 # Fonction pour gérer les choix de l'utilisateur
 def options_menu_utilisateur(choix: int):
     match choix:
-        case 0:
-            util.clear_screen()
-            menu.menu()
         case 1:
             saisir_informations_utilisateur()
         case 2:
