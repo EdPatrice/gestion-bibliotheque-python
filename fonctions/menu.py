@@ -1,6 +1,7 @@
 import fonctions.fonctions_utilisateur as u
 import fonctions.fonctions_emprunt as e
 import fonctions.fonctions_statistiques as s
+import fonctions.fonctions_livres as l
 import fonctions.util as util
 
 def menu_principal():
@@ -22,7 +23,8 @@ def options_menu_principal(choix: int):
 
         # gestion livres
         case 1: 
-            pass
+            util.clear_screen()
+            l.menu_livre()
         
         # gestion utilisateurs
         case 2:             
