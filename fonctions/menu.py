@@ -14,10 +14,10 @@ def menu_principal():
     options_menu_principal(int(choix))
 
 def options_menu_principal(choix: int):
+    util.clear_screen()
     match choix:
         #fermer le programme 
         case 0: 
-            util.clear_screen()
             exit()
 
         # gestion livres
@@ -25,18 +25,15 @@ def options_menu_principal(choix: int):
             pass
         
         # gestion utilisateurs
-        case 2: 
-            util.clear_screen()
+        case 2:             
             u.menu_utilisateur()
 
         # gestion emprunts
-        case 3:
-            util.clear_screen()
+        case 3:            
             e.menu_emprunt()
 
         # rapports
-        case 4: 
-            util.clear_screen()
+        case 4:             
             s.menu_statistiques()
 
     util.clear_screen()

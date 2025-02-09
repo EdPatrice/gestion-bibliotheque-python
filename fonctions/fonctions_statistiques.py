@@ -1,8 +1,8 @@
 import csv
+import fonctions.util as util
 from datetime import datetime
 from collections import defaultdict, Counter
-# from fonctions import util
-import fonctions.util as util
+from classes import Utilisateur, Gestion_Utilisateurs, Livre, Gestion_Livres
 
 files = util.read_json("config.json")
 
@@ -10,39 +10,19 @@ def List_Book():
     
     with open(files["BOOKS_CSV"], 'r') as file:
         
-        List = csv.DictReader(file)
+        List = csv.DictReader(file)        
         
         for count, line in enumerate(List, start=1):
             
             print(f"\n********************** Livre {count} ***************************\n")
             
             for key, value in line.items():
-                print(f"{key} : {value}")
-                
-def search_user(id:str):
-    
-    with open(files["USERS_CSV"], 'r') as f:
-                users = f.readlines()
-                
-                for user in users:
-                    user = user.strip().split(', ')
-                    if user[0] == id:
-                        return user
-                else:
-                    return None
-                
-def search_book(id:str):
-    
-    with open(files["BOOKS_CSV"], 'r') as f:
-                books = f.readlines()
-                
-                for book in books:
-                    book = book.strip().split(', ')
-                    if book[0] == id:
-                        return book
-                else:
-                    return None
-
+                key = str(key).replace(' ', '')
+                value = str(value).strip()
+                print(f"{key}: ", end='')
+                if key != "Auteur":
+                     print('\t', end='')
+                print(value)        
 
 def History_Emprunt():
 
@@ -61,7 +41,7 @@ def History_Emprunt():
         dates.append((date_retour, 'Retour', line))
     
     # Trier les dates par ordre décroissant
-    dates.sort(reverse=True, key=lambda x: x[0])
+    dates.sort(key=lambda x: x[0])
     
     # Afficher les dates triées
     
@@ -69,15 +49,15 @@ def History_Emprunt():
 
     for date, type_date, lines in dates:
         print(f"{date.strftime(('%Y-%m-%d'))}, Type: {type_date}")
-        
-        User_name = search_user(lines[1])
-        Book_Title = search_book(lines[2])
+                
+        user, _ = Gestion_Utilisateurs.get_user_info(lines[1])
+        book, _ = Gestion_Livres.get_book_info(lines[2])
 
         if type_date == 'Emprunt':
-            print(f"  Nom Utilisateur: {User_name[1]}, Titre du livre: {Book_Title[1]}, Date Retour Prévue: {lines[4]}")
+            print(f"  Utilisateur: \t\t{user.nom_complet} \n  Livre: \t\t{book.title} \n  Date Retour Prévue: \t{lines[4]}")
         
         else:
-            print(f"  Nom Utilisateur: {User_name[1]}, Titre du livre: {Book_Title[1]}")
+            print(f"  Utilisateur: \t{user.nom_complet} \n  Livre: \t{book.title}")
         print()
 
 
@@ -143,27 +123,34 @@ def afficher_livres_par_genre(most_borrowed):
                         break  
         print("\n")
 
-def menu_statistiques():       
-        # util.clear_screen()
-        
+def menu_statistiques(retour_au_menu_principal: bool = False):       
+    # util.clear_screen()
+    if not retour_au_menu_principal:    
         choix = input("Veuillez inserer le numero correspondant a l'option desiree: \n\n1. Rapport des Livres disponibles et empruntes.\n2. Historique des emprunts et retours. \n3. Rapport des trois(3) genres de livres les plus empruntes. \n\n0. Retour. \n\n-> ")
         while util.choix_valide(choix, 0, 3) != True:
                 choix = input("Saisie incorrecte, reesayez: ")  
         choix = int(choix) 
+        options_menu_statistiques(choix)
 
-        match choix:             
-            case 1:                      # rapport de livres dispo et empruntes
-                util.clear_screen()
-                List_Book()                
-                util.wait()
+def options_menu_statistiques(choix):
+    match choix:      
+        case 0:            
+            menu_statistiques(True) 
+            return   
+        case 1:                      # rapport de livres dispo et empruntes
+            util.clear_screen()
+            List_Book()                
+            util.wait()
 
-            case 2:                 # Historique des emprunts et retours
-                util.clear_screen()
-                History_Emprunt()                
-                util.wait()
-                
-            case 3:             # Rapports sur les genres les plus empruntes
-                util.clear_screen()
-                most_borrowed = genres_plus_empruntes()
-                afficher_livres_par_genre(most_borrowed)                
-                util.wait() 
+        case 2:                 # Historique des emprunts et retours
+            util.clear_screen()
+            History_Emprunt()                
+            util.wait()
+            
+        case 3:             # Rapports sur les genres les plus empruntes
+            util.clear_screen()
+            most_borrowed = genres_plus_empruntes()
+            afficher_livres_par_genre(most_borrowed)                
+            util.wait() 
+    util.clear_screen()
+    menu_statistiques()

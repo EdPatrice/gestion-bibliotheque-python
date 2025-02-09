@@ -1,4 +1,4 @@
-from classes import Utilisateur
+from classes import Utilisateur, Gestion_Utilisateurs
 import fonctions.util as util
 
 
@@ -59,64 +59,71 @@ def supprimer_utilisateur(id_utilisateur):
 
 # Fonction pour demander à l'utilisateur d'entrer ses informations
 def saisir_informations_utilisateur():
-    nom = input("Entrez le nom de l'utilisateur : ")
-    prenom = input("Entrez le prénom de l'utilisateur : ")
-    contact = input("Entrez le contact de l'utilisateur : ")
-    ajouter_utilisateur(nom, prenom, contact)
+    print("Ajout d'un nouvel utilisateur:\n")
+    nom = input("Entrez le nom de l'utilisateur -> ")
+    while not nom:
+        nom = input("Nom invalide. Entrez le nom de l'utilisateur -> ")
+    prenom = input("Entrez le prénom de l'utilisateur -> ")
+    while not prenom:
+        prenom = input("Prénom invalide. Entrez le prénom de l'utilisateur -> ")
+    contact = input("Entrez le contact de l'utilisateur -> ")    
+    while not contact:
+        contact = input("Contact invalide. Entrez le contact de l'utilisateur -> ")
+    user = Utilisateur(0, nom, prenom, contact)
+    user.id_utilisateur = Gestion_Utilisateurs.generate_id(user)
+    Gestion_Utilisateurs.enregistrer_utilisateur(user)
+    util.clear_screen()
+    print(user)
+    print("\nUtilisateur ajouté avec succès.")
+    util.wait()
 
 # Fonction pour afficher le menu de gestion des utilisateurs
-def menu_utilisateur():
+def menu_utilisateur(retour_au_menu_principal: bool = False):
+    if retour_au_menu_principal:
+        return
     print("Options:", end="\n\n")
     print("1. Ajouter un utilisateur")
     print("2. Afficher la liste des utilisateurs")
     print("3. Mettre à jour les informations d'un utilisateur")
-    print("4. Supprimer un utilisateur")
-    # print("5. Ajouter un emprunt à un utilisateur")
+    print("4. Supprimer un utilisateur")    
     print("\n0. Retour")
 
     choix = input("\nChoisissez une option -> ")
-    while not util.choix_valide(choix, 0, 5):
+    while not util.choix_valide(choix, 0, 4):
         choix = input("\nSaisie incorrecte, reessayez -> ")
-    
+    choix = int(choix)
     options_menu_utilisateur(choix)
 
 # Fonction pour gérer les choix de l'utilisateur
 def options_menu_utilisateur(choix: int):
+    util.clear_screen()
     match choix:
+        case 0:
+            menu_utilisateur(True)
+            return
         case 1:
             saisir_informations_utilisateur()
-        case 2:
-            # afficher_utilisateurs()
-            Utilisateur.afficher_utilisateurs(USERS_CSV, 1)
-        case 3:
-            try:
-                id_utilisateur = int(input("Entrez l'ID de l'utilisateur à mettre à jour : "))
-                nouveau_nom = input("Entrez le nouveau nom (laissez vide pour ne pas changer) : ")
-                nouveau_prenom = input("Entrez le nouveau prénom (laissez vide pour ne pas changer) : ")
-                nouveau_contact = input("Entrez le nouveau contact (laissez vide pour ne pas changer) : ")
-                mettre_a_jour_utilisateur(id_utilisateur, nouveau_nom or None, nouveau_prenom or None, nouveau_contact or None)
-            except ValueError:
-                print("ID invalide.")
+
+        case 2:            
+            Gestion_Utilisateurs.afficher_utilisateurs(1)
+            util.wait()
+
+        case 3:            
+            print("Liste des utilisateurs:\n")
+            Gestion_Utilisateurs.afficher_utilisateurs()
+            id_utilisateur = input("\nEntrez l'ID de l'utilisateur à mettre à jour -> ")
+            while Gestion_Utilisateurs.get_user_info(id_utilisateur)[0] == None:
+                id_utilisateur = input("ID invalide. Entrez l'ID de l'utilisateur à mettre à jour -> ")                       
+            util.clear_screen()
+            Gestion_Utilisateurs.modifier_utilisateur(id_utilisateur)
+            util.wait()
+
         case 4:
-            try:
-                id_utilisateur = int(input("Entrez l'ID de l'utilisateur à supprimer : "))
-                supprimer_utilisateur(id_utilisateur)
-            except ValueError:
-                print("ID invalide.")
-        # elif choix == "5":
-        #     try:
-        #         id_utilisateur = int(input("Entrez l'ID de l'utilisateur pour ajouter un emprunt : "))
-        #         emprunt = input("Entrez le titre de l'emprunt : ")
-        #         ajouter_emprunt(id_utilisateur, emprunt)
-        #     except ValueError:
-        #         print("ID invalide.")                    
+            print("Liste des utilisateurs:\n")
+            Gestion_Utilisateurs.afficher_utilisateurs()
+            id_utilisateur = input("\nEntrez l'ID de l'utilisateur à supprimer -> ")
+            Gestion_Utilisateurs.supprimer_utilisateur(id_utilisateur)
+            util.wait()                        
 
-def write_headers(USERS_CSV):
-    import os
-
-    if os.path.getsize(USERS_CSV) == 0:
-        with open(USERS_CSV, 'w') as f: 
-            f.write("Id, Nom, Prenom, Contact")
-
-def generer_id(nom_utilisateur: str) -> str:
-    pass
+    util.clear_screen()
+    menu_utilisateur()                   

@@ -83,3 +83,8 @@ def date_valide(date: str) -> bool:
         if day > 30: 
             return False
     return True
+
+def message_de_confirmation_valide(confirmation: str, choix_de_reponse1: str, choix_de_reponse2: str) -> bool:
+    if confirmation.lower() == choix_de_reponse1.lower() or confirmation.lower() == choix_de_reponse2.lower():
+        return True
+    return False
