@@ -1,4 +1,4 @@
-from classes import Utilisateur, Gestion_Utilisateurs
+from classes import Utilisateur, Gestion_Utilisateurs, Gestion_Emprunt
 import fonctions.util as util
 
 
@@ -82,14 +82,15 @@ def menu_utilisateur(retour_au_menu_principal: bool = False):
     if retour_au_menu_principal:
         return
     print("Options:", end="\n\n")
-    print("1. Ajouter un utilisateur")
-    print("2. Afficher la liste des utilisateurs")
-    print("3. Mettre à jour les informations d'un utilisateur")
-    print("4. Supprimer un utilisateur")    
+    print("1. Ajouter un utilisateur.")
+    print("2. Afficher la liste des utilisateurs.")
+    print("3. Mettre à jour les informations d'un utilisateur.")
+    print("4. Supprimer un utilisateur.")    
+    print("5. Suivi des emprunts par utilisateurs.")    
     print("\n0. Retour")
 
     choix = input("\nChoisissez une option -> ")
-    while not util.choix_valide(choix, 0, 4):
+    while not util.choix_valide(choix, 0, 5):
         choix = input("\nSaisie incorrecte, reessayez -> ")
     choix = int(choix)
     options_menu_utilisateur(choix)
@@ -125,7 +126,25 @@ def options_menu_utilisateur(choix: int):
             while not Gestion_Utilisateurs.get_user_info(id_utilisateur)[0]:
                 id_utilisateur = input("Sasie incorrecte. Entrez l'ID de l'utilisateur à supprimer -> ")
             Gestion_Utilisateurs.supprimer_utilisateur(id_utilisateur)
-            util.wait()                        
+            util.wait()  
+
+        case 5:
+            print("Liste des utilisateurs:\n")
+            Gestion_Utilisateurs.afficher_utilisateurs()
+            id_utilisateur = input("\nEntrez l'ID de l'utilisateur pour voir ses emprunts -> ")
+            while not Gestion_Utilisateurs.get_user_info(id_utilisateur)[0]:
+                id_utilisateur = input("Saisie incorrecte. Entrez l'ID de l'utilisateur pour voir ses emprunts -> ")
+            user, _ = Gestion_Utilisateurs.get_user_info(id_utilisateur)
+            util.clear_screen()
+            emprunts = Gestion_Emprunt.get_emprunts_utilisateur(id_utilisateur)                
+            if not emprunts:
+                print(f"{user.nom_complet} n'a aucun emprunt en cours.")
+                util.wait()
+            else:
+                print(f"Emprunts de {user.nom_complet}:\n")
+                for emprunt in emprunts:
+                    print(emprunt)
+                util.wait()
 
     util.clear_screen()
     menu_utilisateur()                   

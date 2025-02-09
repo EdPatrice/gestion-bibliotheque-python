@@ -189,14 +189,22 @@ class Gestion_Livres:
 
 class Emprunt: 
 
-    def __init__(self, id, livre, utilisateur, date_emprunt, date_retour_prevue, date_retour = None):
+    def __init__(self, id, id_livre, id_utilisateur, date_emprunt, date_retour_prevue, date_retour = None):
         self.id = id
-        self.livre = livre
-        self.utilisateur = utilisateur
+        self.livre = id_livre
+        self.utilisateur = id_utilisateur
         self.date_emprunt = date_emprunt
         self.date_retour_prevue = date_retour_prevue
         self.date_retour = date_retour
 
+    def __str__(self):
+        user, _ = Gestion_Utilisateurs.get_user_info(self.utilisateur)
+        book, _ = Gestion_Livres.get_book_info(self.livre)
+        if user and book:
+            return f"ID: \t\t\t{self.id}\nLivre: \t\t\t{book.title}\nAuteur: \t\t{book.author}\nDate Emprunt: \t\t{self.date_emprunt}\nDate Retour Prevue: \t{self.date_retour_prevue}\nDate Retour: \t\t{self.date_retour}\n"        
+        else: 
+            return ""
+    
 class Gestion_Emprunt:
 
     def __init__(self):
@@ -229,6 +237,19 @@ class Gestion_Emprunt:
             return emprunt, index_emprunt, user
         else:
             return None
+        
+    @classmethod
+    def get_emprunts_utilisateur(self, user_id: str) -> list[Emprunt]:
+        emprunts = []
+        with open(files["EMPRUNTS_CSV"], 'r') as f:
+            emprunts_csv = f.readlines()
+        for emprunt in emprunts_csv[1:]:
+            emprunt = emprunt.replace('\n', '').split(", ")
+            if emprunt[1] == user_id:
+                emprunt = Emprunt(emprunt[0], emprunt[2], emprunt[1], emprunt[3], emprunt[4], emprunt[5])
+                emprunts.append(emprunt)
+        return emprunts
+        
         
     @classmethod
     def enregistrement_emprunt(self):
