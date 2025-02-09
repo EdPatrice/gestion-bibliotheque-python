@@ -174,7 +174,7 @@ class Gestion_Livres:
         if book_exists:
             return livre, index_livre
         else:
-            return None
+            return None, None
     
     @classmethod
     def list_books(self, get_all_details: bool= 0):
@@ -237,8 +237,8 @@ class Gestion_Emprunt:
         Gestion_Livres.list_books()  
         book_id = input("\nVeuillez inserer l'identifiant du livre qui sera emprunte: \n-> ")
         # controle de saisie ID ... 
-        while Gestion_Livres.get_book_info(book_id) == None:
-            book_id = input("\nErreur, veuillez inserer l'identifiant d'un livre existant dans la base de donnees: ")
+        while Gestion_Livres.get_book_info(book_id)[0] == None:
+            book_id = input("\nErreur, veuillez inserer l'identifiant d'un livre existant dans la base de donnees -> ")
         book, _ = Gestion_Livres.get_book_info(book_id)
 
         # insertion de l'utilisateur
@@ -247,8 +247,8 @@ class Gestion_Emprunt:
         Gestion_Utilisateurs.afficher_utilisateurs()
         user_id = input("\nVeuillez inserer l'identifiant de l'emprunteur: \n-> ")
         # controle de saisie ID ... 
-        while Gestion_Utilisateurs.get_user_info(user_id) == None:
-            user_id = input("\nErreur, veuillez inserer l'identifiant d'un utilisateur existant dans la base de donnees: ")
+        while Gestion_Utilisateurs.get_user_info(user_id)[0] == None:
+            user_id = input("\nErreur, veuillez inserer l'identifiant d'un utilisateur existant dans la base de donnees -> ")
         user, _ = Gestion_Utilisateurs.get_user_info(user_id)                                
 
         util.clear_screen()
@@ -269,6 +269,7 @@ class Gestion_Emprunt:
 
     @classmethod
     def enregistrement_retour(self):
+        print("Liste des emprunts qui n'ont pas encore ete retournes: \n")
         emprunts_sans_date_retour = 0
         with open(files["EMPRUNTS_CSV"], 'r') as f:
             emprunts = f.readlines()
@@ -276,7 +277,12 @@ class Gestion_Emprunt:
             emprunt = emprunt.replace('\n', '').split(', ')
             if emprunt[5] == "None":
                 emprunts_sans_date_retour += 1
-                print("ID emprunt:", emprunt[0], "\tID Utilisateur:", emprunt[1], "\tID Livre:", emprunt[2], "\tDate Emprunt:", emprunt[3], "\tDate Retour Prevue:", emprunt[4], "\tDate Retour:", emprunt[5])                            
+                user, _ = Gestion_Utilisateurs.get_user_info(emprunt[1])
+                book, _ = Gestion_Livres.get_book_info(emprunt[2])
+                if user and book:
+                    print(f"\n********************** {emprunts_sans_date_retour} ***************************\n")
+                    print("Date Emprunt:", emprunt[3], "\tDate Retour Prevue:", emprunt[4], "\nID emprunt:", emprunt[0])
+                    print( "Utilisateur:", user.nom_complet, "\nLivre:", book.title)                            
                     
         if emprunts_sans_date_retour != 0:  # cas ou il y a des emprunts sans date de retour                           
             id_emprunt = input("\nVeuillez inserer l'identifiant de l'emprunt a mettre a jour: \n-> ")                
@@ -325,7 +331,7 @@ class Gestion_Emprunt:
             emprunt = emprunt.replace('\n', '').split(', ')
             user, _ = Gestion_Utilisateurs.get_user_info(emprunt[1])
             book, _ = Gestion_Livres.get_book_info(emprunt[2])
-            if date_du_jour > emprunt[4]:                            
+            if date_du_jour > emprunt[4] and user and book:                            
                 print("Date Emprunt:", emprunt[3], "\tDate Retour Prevue:", emprunt[4], "\t\tUtilisateur:", user.nom_complet, "\tLivre:", book.title)                          
                 i+=1
         if i == 0:

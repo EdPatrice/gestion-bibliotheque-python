@@ -48,15 +48,16 @@ def History_Emprunt():
     print(f"\n********************** HISTORIQUE ***************************\n")
 
     for date, type_date, lines in dates:
-        print(f"{date.strftime(('%Y-%m-%d'))}, Type: {type_date}")
                 
         user, _ = Gestion_Utilisateurs.get_user_info(lines[1])
         book, _ = Gestion_Livres.get_book_info(lines[2])
 
-        if type_date == 'Emprunt':
+        if type_date == 'Emprunt' and user and book:
+            print(f"{date.strftime(('%Y-%m-%d'))}, Type: {type_date}")
             print(f"  Utilisateur: \t\t{user.nom_complet} \n  Livre: \t\t{book.title} \n  Date Retour Prévue: \t{lines[4]}")
         
-        else:
+        elif type_date == 'Retour' and user and book:
+            print(f"{date.strftime(('%Y-%m-%d'))}, Type: {type_date}")
             print(f"  Utilisateur: \t{user.nom_complet} \n  Livre: \t{book.title}")
         print()
 

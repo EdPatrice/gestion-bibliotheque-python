@@ -8,7 +8,7 @@ def menu_emprunt(retour_au_menu_principal = False):
             util.clear_screen()
             choix = input("Veuillez inserer le numero correspondant a l'option desiree: \n\n1. Enregistrement d'un emprunt. \n2. Enregistrer un retour. \n3. Voir les retards de retour. \n\n0. Retour. \n\n-> ")
             while util.choix_valide(choix, 0, 3) != True:
-                    choix = input("Saisie incorrecte, reesayez: ")  
+                    choix = input("Saisie incorrecte, reesayez -> ")  
             choix = int(choix) 
             options_menu_emprunt(choix)
 

@@ -122,6 +122,8 @@ def options_menu_utilisateur(choix: int):
             print("Liste des utilisateurs:\n")
             Gestion_Utilisateurs.afficher_utilisateurs()
             id_utilisateur = input("\nEntrez l'ID de l'utilisateur à supprimer -> ")
+            while not Gestion_Utilisateurs.get_user_info(id_utilisateur)[0]:
+                id_utilisateur = input("Sasie incorrecte. Entrez l'ID de l'utilisateur à supprimer -> ")
             Gestion_Utilisateurs.supprimer_utilisateur(id_utilisateur)
             util.wait()                        
 
