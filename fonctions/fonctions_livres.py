@@ -11,61 +11,72 @@ from classes import  Livre, Gestion_Livres
 #fonction option 1 
 manager = Gestion_Livres()
 
-def menu_livre():
-    print("------------Gestion des livres------------\n\n")
-    print("1. Enregistrer un livre.")
-    print("2. Mise à jour d'un livre.")
-    print("3. Recherche d'un livre.")
-    print("4. Supprimer un livre.")
-    print("5. La liste des livres.")
-    print("6. Retour au menu principal.")
-    while True : 
-        choix = input("Quelle tâche vous voulez faire ?\t")
-        while choix not in ['1','2','3','4','5','6'] :
-            choix = input("Veuillez insérer une valeur se trouvant dansa la liste :\t")
-            
-        if choix =='6':
-           util.clear_screen()
-            # menu_principal()
+def menu_livre(retour_au_menu_principal = False):
+    
+    if retour_au_menu_principal:
+        return
+    else:
+        print("------------Gestion des livres------------\n\n")
+        print("1. Enregistrer un livre.")
+        print("2. Mise à jour d'un livre.")
+        print("3. Recherche d'un livre.")
+        print("4. Supprimer un livre.")
+        print("5. La liste des livres.")
+        print("\n0. Retour au menu principal.")
 
-        match choix : 
-            case '1' : 
-               util.clear_screen()
-               id = demander_id()
-               titre = input("Quel est le titre du livre ? \t-> ")
-               auteur = input("Quel(le) est l'auteur(e) ? \t-> ")
-               genre = input("Quel est le genre du livre ? \t-> ")
-               manager.ajouter(id, titre, auteur, genre)  # Ajoute le livre à la liste
-               ajouter(id, titre, auteur, genre)  # Sauvegarde le livre dans le fichier CSV
-               util.wait()
-               break
+        choix = input("\nChoisissez une option -> ")
+        while not util.choix_valide(choix, 0, 5):
+            choix = input("Veuillez insérer une valeur se trouvant dansa la liste -> ")
+        choix = int(choix)
+        options_menu_livre(choix)
 
-            case '2' :
-               util.clear_screen()
-               id = input("Veuillez insérer l'ISBN pour faire la modification : \t")
-               modification(id)
-               util.wait()
-               break
+def options_menu_livre(choix: int):  
 
-            case '3' : 
-               util.clear_screen()
-               valeur = input("Veuillez insérer le titre, l'auteur ou le genre du livre à rechercher -> \t")
-               search(valeur)
-               util.wait()
-               break
-            
-            case '4' : 
-               util.clear_screen()
-               id = input("Entrer l'ISBN du livre -> \t")
-               sup(id)
-               util.wait()
-               break 
+    util.clear_screen()
+    match choix : 
+        case 0:
+            menu_livre(True)
+            return
 
-            case '5' :
-               util.clear_screen()
-               lecture_csv()
-               util.wait()
-               break
+        case 1 : 
+            util.clear_screen()
+            id = demander_id()
+            titre = input("Quel est le titre du livre \t-> ").strip()
+            auteur = input("Quel(le) est l'auteur(e) \t-> ").strip()
+            genre = input("Quel est le genre du livre \t-> ").strip()
+            manager.ajouter(id, titre, auteur, genre)  # Ajoute le livre à la liste
+            ajouter(id, titre, auteur, genre)  # Sauvegarde le livre dans le fichier CSV
+            util.wait()            
+
+        case 2 :
+            util.clear_screen()
+            lecture_csv()
+            id = input("\nVeuillez insérer l'ISBN pour faire la modification : -> ")
+            util.clear_screen()
+            modification(id)
+            util.wait()            
+
+        case 3 : 
+            util.clear_screen()
+            lecture_csv()
+            valeur = input("\nVeuillez insérer le titre, l'auteur ou le genre du livre à rechercher -> ")
+            search(valeur)
+            util.wait()            
+        
+        case 4 : 
+            util.clear_screen()
+            lecture_csv()
+            id = input("\nEntrer l'ISBN du livre -> ")
+            sup(id)
+            util.wait()             
+
+        case 5 :
+            util.clear_screen()
+            lecture_csv()
+            util.wait() 
+    
+    util.clear_screen()
+    menu_livre()           
 
 
 # Chemin vers le fichier CSV
@@ -139,13 +150,13 @@ def lecture_csv():
         lire = csv.DictReader(f)
         
         print("La liste des livres enregistrées : \n")
-        print(f"{'id':<15}{'title':<20}{'author':<18}{'genre':<15}")
+        print(f"{'ID':<20}{'Titre':<30}{'Auteur':<30}{'Genre':<20}")
         print("-" * 100)
         
         for ligne in lire:
             # Vérifiez que les clés existent dans le dictionnaire ligne
             if 'id' in ligne and 'title' in ligne and 'author' in ligne and 'genre' in ligne:
-                print(f"{ligne['id']:<15} {ligne['title']:<18} {ligne['author']:<18} {ligne['genre']:<15}")
+                print(f"{ligne['id']:<20}{ligne['title']:<30}{ligne['author']:<30}{ligne['genre']:<20}")
             else:
                 print("Erreur : En-tête manquant ou incorrect dans le fichier CSV.")
 
@@ -170,9 +181,9 @@ def modification(id):
                 if ligne['id'] == id:
                     # Afficher les informations actuelles du livre
                     print("Informations actuelles du livre : \n")
-                    print(f"{'id':<15} {'title':<20} {'author':<18} {'genre':<15} ")
+                    print(f"{'id':<20} {'title':<20} {'author':<20} {'genre':<20} ")
                     print("-" * 100)
-                    print(f"{ligne['id']:<15} {ligne['title']:<18} {ligne['author']:<18} {ligne['genre']:<15}")
+                    print(f"{ligne['id']:<20} {ligne['title']:<20} {ligne['author']:<20} {ligne['genre']:<20}")
 
 
                     # Demander les nouvelles valeurs pour chaque champ

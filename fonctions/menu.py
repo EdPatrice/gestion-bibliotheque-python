@@ -23,7 +23,6 @@ def options_menu_principal(choix: int):
 
         # gestion livres
         case 1: 
-            util.clear_screen()
             l.menu_livre()
         
         # gestion utilisateurs
