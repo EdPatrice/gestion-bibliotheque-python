@@ -1,5 +1,6 @@
 import fonctions.fonctions_utilisateur as u
 import fonctions.fonctions_emprunt as e
+import fonctions.fonctions_statistiques as s
 import fonctions.util as util
 
 def menu_principal():
@@ -36,7 +37,7 @@ def options_menu_principal(choix: int):
         # rapports
         case 4: 
             util.clear_screen()
-            pass
+            s.menu_statistiques()
 
     util.clear_screen()
     menu_principal()
