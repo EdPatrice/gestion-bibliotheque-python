@@ -122,8 +122,8 @@ def format(id):
         with open(BOOKS_CSV, mode="r", newline="") as file:
             reader = csv.DictReader(file)  # Lire le fichier sous forme de dictionnaire
             for row in reader:
-                if "ISBN" in row and row["ISBN"]:  # Vérifier si la colonne ISBN existe et n'est pas vide
-                    id_existants.add(row["ISBN"])
+                if "id" in row and row["id"]:  # Vérifier si la colonne ISBN existe et n'est pas vide
+                    id_existants.add(row["id"])
     except FileNotFoundError:
         print("Erreur : Le fichier 'livres.csv' n'a pas été trouvé.")
         return False
