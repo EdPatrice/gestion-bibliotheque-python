@@ -2,4 +2,5 @@ MAMA.PY
 test.ipynb
 Notes.txt
 draft.ipynb
-fonctions/__pycache__/*
+fonctions/__pycache__/
+__pycache__/
