@@ -157,19 +157,38 @@ class Gestion_Livres:
         book = Livre(id, title, author, genre)
         self.books.append(book)
     
+    @classmethod
     def get_book_info(self, book_id: str) -> tuple[Livre, int]:
-        for index, book in enumerate(self.books):
-            if book.id == book_id:
-                return book, index
-        return None, None
+        book_exists = False
+        with open(files["BOOKS_CSV"], 'r') as f: 
+            books = f.readlines()
+        index_livre = 1
+        for book in books[1:]:
+            book = book.replace('\n', '').split(",")
+            if book[0] == book_id:
+                book_exists = True
+                book_title = book[1]
+                book_author = book[2]
+                book_genre = book[3]
+                livre = Livre(book_id, book_title, book_author, book_genre)
+            index_livre += 1
+        if book_exists:
+            return livre, index_livre
+        else:
+            return None, None
 
-    def list_books(self, get_all_details: bool = False):
-        for book in self.books: 
+    @classmethod
+    def list_books(self, get_all_details: bool= 0):
+        with open(files["BOOKS_CSV"], 'r') as f:
+            books = f.readlines()        
+        for book in books[1:]: 
+            book = book.split(',')
             if not get_all_details: 
-                print(f"id: {book.id}\ttitle: {book.title}")
+                print("ID:", book[0], "\tTitle:", book[1])
             else:
-                print(f"id: {book.id}\ttitle: {book.title}\tauthor: {book.author}\tgenre: {book.genre}")
+                print("ID:", book[0], "\tTitle:", book[1], "Author:", book[2], "Genre:", book[3])
 
+    @classmethod
     def modifier_livre(self, book_id: str, new_title: str = None, new_author: str = None, new_genre: str = None):
         book, index = self.get_book_info(book_id)
         if book:
@@ -184,6 +203,7 @@ class Gestion_Livres:
         else:
             print("\nLivre non trouvé.\n")
 
+    @classmethod
     def supprimer_livre(self, book_id: str):
         book, index = self.get_book_info(book_id)
         if book:

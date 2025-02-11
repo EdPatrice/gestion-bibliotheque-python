@@ -83,7 +83,7 @@ def genres_plus_empruntes():
                     books = file.readlines()
                     
                     for book in books:
-                        book = book.strip().split(', ')
+                        book = book.strip().split(',')
                         
                         if len(book) >= 4 and book[0] == id_book: 
                             genre = book[3]
@@ -100,7 +100,7 @@ def afficher_livres_par_genre(most_borrowed):
     
     # Charger les livres
     with open(files["BOOKS_CSV"], 'r') as file:
-        books = [book.strip().split(', ') for book in file.readlines()]
+        books = [book.strip().split(',') for book in file.readlines()]
 
     # Charger les emprunts
     with open(files["EMPRUNTS_CSV"], 'r') as file:
