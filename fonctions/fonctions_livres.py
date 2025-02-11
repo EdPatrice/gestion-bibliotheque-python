@@ -60,6 +60,7 @@ def options_menu_livre(choix: int):
             util.clear_screen()
             lecture_csv()
             valeur = input("\nVeuillez insérer le titre, l'auteur ou le genre du livre à rechercher -> ")
+            util.clear_screen()
             search(valeur)
             util.wait()            
         
@@ -252,7 +253,7 @@ def search(valeur):
                 break  # Sortir de la boucle si un livre est trouvé
 
             print(f"Aucun livre trouvé contenant '{valeur}' dans le titre, l'auteur ou le genre.")
-            valeur = input("Veuillez insérer le nom d'un autre titre, un auteur ou un genre (ou appuyez sur Entrée pour quitter) : ").strip()
+            valeur = input("Veuillez insérer le nom d'un autre titre, un auteur ou un genre (ou appuyez sur Entrée pour quitter) -> ").strip()
 
             # Sortir de la boucle si l'utilisateur appuie sur Entrée sans saisir de valeur
             if not valeur:
